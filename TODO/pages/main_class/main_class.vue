@@ -37,7 +37,7 @@
 						v-for="t in item.tasks"
 						:key="t.id"
 						class="task-item"
-							@click="goDetail(t)"
+							@click.stop="goDetail(t)"
 					>
 						<view class="task-left">
 							<view

@@ -106,8 +106,30 @@ const filteredTasks = computed(() => {
 	return tasks.value.filter(t => t.type === activeCategory.value)
 })
 
-const todayTasks = computed(() => filteredTasks.value.filter(t => t.deadline === 'today'))
-const tomorrowTasks = computed(() => filteredTasks.value.filter(t => t.deadline === 'tomorrow'))
+const todayTasks = computed(() => {
+	const now = new Date()
+	const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+	return filteredTasks.value.filter(t => {
+		if (t.deadline === 'today') return true
+		if (t.startDate && t.endDate) {
+			return t.startDate <= todayStr && todayStr <= t.endDate
+		}
+		return false
+	})
+})
+
+const tomorrowTasks = computed(() => {
+	const now = new Date()
+	const tomorrowDate = new Date(now.getTime() + 86400000)
+	const tomorrowStr = `${tomorrowDate.getFullYear()}-${String(tomorrowDate.getMonth() + 1).padStart(2, '0')}-${String(tomorrowDate.getDate()).padStart(2, '0')}`
+	return filteredTasks.value.filter(t => {
+		if (t.deadline === 'tomorrow') return true
+		if (t.startDate && t.endDate) {
+			return t.startDate <= tomorrowStr && tomorrowStr <= t.endDate
+		}
+		return false
+	})
+})
 
 function toggleTask(item) {
 	item.done = !item.done

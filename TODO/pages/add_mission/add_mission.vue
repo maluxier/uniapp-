@@ -93,6 +93,11 @@ function handleCreate() {
 
 	const now = new Date()
 	const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+
+	// 计算明天的日期字符串
+	const tomorrowDate = new Date(now.getTime() + 86400000)
+	const tomorrowStr = `${tomorrowDate.getFullYear()}-${String(tomorrowDate.getMonth() + 1).padStart(2, '0')}-${String(tomorrowDate.getDate()).padStart(2, '0')}`
+
 	const deadline = startDate.value === todayStr ? 'today' : 'tomorrow'
 
 	// 保存任务到本地存储（供 main_mission 使用）
@@ -101,9 +106,9 @@ function handleCreate() {
 		id: Date.now(),
 		name: name.value.trim(),
 		type: type.value,
-			description: description.value.trim(),
-			startDate: startDate.value,
-			endDate: endDate.value,
+		description: description.value.trim(),
+		startDate: startDate.value,
+		endDate: endDate.value,
 		done: false,
 		deadline: deadline
 	})
