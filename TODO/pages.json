@@ -1,5 +1,5 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -23,6 +23,24 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/main_class/main_class",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/main_my/main_my",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/add_mission/add_mission",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
@@ -31,5 +49,24 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"uniIdRouter": {}
+	"uniIdRouter": {},
+	"tabBar": {
+		"backgroundColor": "#fff",
+		"color": "#2E3440",
+		"selectedColor": "#5E81AC",
+		"list": [
+			{
+				"pagePath": "pages/main_mission/main_mission",
+				"text": "任务"
+			},
+			{
+				"pagePath": "pages/main_class/main_class",
+				"text": "分类"
+			},
+			{
+				"pagePath": "pages/main_my/main_my",
+				"text": "我的"
+			}
+		]
+	}
 }

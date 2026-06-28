@@ -26,7 +26,7 @@
 		<!-- 任务卡片列表 -->
 		<view class="card-list">
 			<!-- 今日任务 -->
-			<uni-card :is-shadow="true" :margin="'0 0 24rpx 0'" :padding="'24rpx 20rpx'">
+			<uni-card :is-shadow="true" :margin="'0 0 24rpx 0'" :padding="'0rpx 20rpx'">
 				<template #title>
 					<text class="card-title">今日任务</text>
 				</template>
@@ -90,28 +90,16 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 
-// ========== 筛选 ==========
 const categories = ['全部', '工作', '生活', '学习']
 const activeCategory = ref('全部')
 
-// ========== 数据接口 ==========
-// tasks 数据可从外部来源（API / 本地存储 / props）注入
-// 数据结构：
-// {
-//   id: string | number,
-//   name: string,        // 任务名称
-//   type: string,        // 目标类型（工作/生活/学习）
-//   done: boolean,       // 是否完成
-//   deadline: 'today' | 'tomorrow'  // 今日或明日
-// }
+const tasks = ref(uni.getStorageSync('tasks') || [])
 
-const tasks = ref([
-	{ id: 1, name: '完成项目需求文档', type: '工作', done: false, deadline: 'today' },
-	{ id: 2, name: '设计数据库模型', type: '工作', done: false, deadline: 'today' },
-	{ id: 3, name: '阅读《设计模式》', type: '学习', done: false, deadline: 'tomorrow' },
-	{ id: 4, name: '整理读书笔记', type: '学习', done: false, deadline: 'tomorrow' },
-])
+onShow(() => {
+	tasks.value = uni.getStorageSync('tasks') || []
+})
 
 const filteredTasks = computed(() => {
 	if (activeCategory.value === '全部') return tasks.value
@@ -127,12 +115,10 @@ function toggleTask(item) {
 }
 
 function onTaskClick(item) {
-	// 预留：点击任务详情
 }
 
 function onAdd() {
-	uni.showToast({ title: '添加任务', icon: 'none' })
-	// 预留：跳转到添加任务页面
+	uni.navigateTo({ url: '/pages/add_mission/add_mission' })
 }
 </script>
 
@@ -144,7 +130,10 @@ function onAdd() {
 	box-sizing: border-box;
 }
 
-/* ===== 顶部 ===== */
+.uni-card {
+	border-radius: 20rpx !important;
+}
+
 .header {
 	display: flex;
 	justify-content: space-between;
@@ -176,7 +165,6 @@ function onAdd() {
 	margin-top: -4rpx;
 }
 
-/* ===== 筛选标签 ===== */
 .filter-scroll {
 	width: 100%;
 	margin-bottom: 30rpx;
@@ -204,7 +192,6 @@ function onAdd() {
 	font-weight: 500;
 }
 
-/* ===== 卡片列表 ===== */
 .card-list {
 	display: flex;
 	flex-direction: column;
@@ -216,7 +203,6 @@ function onAdd() {
 	color: #2E3440;
 }
 
-/* ===== 任务项 ===== */
 .task-items {
 	display: flex;
 	flex-direction: column;
