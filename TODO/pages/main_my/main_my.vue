@@ -34,19 +34,31 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
+
 const statusBarHeight = uni.$ui?.statusBarHeight || 44
 
-const currentUser = uni.getStorageSync('currentUser') || {}
-const nickname = currentUser.nickname || '用户'
-const userInitial = nickname.charAt(0)
+const nickname = ref(uni.getStorageSync('currentUser')?.nickname || uni.getStorageSync('currentUser')?.account || '用户')
+const userInitial = computed(() => nickname.value.charAt(0))
+
+onShow(() => {
+	const user = uni.getStorageSync('currentUser') || {}
+	nickname.value = user.nickname || user.account || '用户'
+})
 
 function goAISettings() {
   uni.navigateTo({ url: '/pages/ai_settings/ai_settings' })
 }
 
 function onSetting(type) {
-	const titles = { account: '账户设置', notification: '通知设置', about: '关于我们' }
-	uni.showToast({ title: titles[type] || type, icon: 'none' })
+	if (type === 'account') {
+		uni.navigateTo({ url: '/pages/settings_ID/settings_ID' })
+	} else if (type === 'notification') {
+		uni.showToast({ title: '通知设置', icon: 'none' })
+	} else if (type === 'about') {
+		uni.showToast({ title: '关于我们', icon: 'none' })
+	}
 }
 
 function handleLogout() {
@@ -87,7 +99,7 @@ function handleLogout() {
 	width: 100rpx;
 	height: 100rpx;
 	border-radius: 50%;
-	background-color: #e0e0e0;
+	background-color: #D8DEE9;
 	color: #888;
 	font-size: 40rpx;
 	font-weight: 600;
