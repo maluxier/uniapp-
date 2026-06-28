@@ -19,16 +19,17 @@
 			return {}
 		},
 		onLoad() {
-
+			const user = uni.getStorageSync('currentUser')
+			if (user && user.account) {
+				uni.reLaunch({ url: '/pages/main_mission/main_mission' })
+			}
 		},
 		methods: {
 			goLogin() {
-				// TODO: 跳转到登录页
-				uni.showToast({ title: '登录', icon: 'none' })
+				uni.navigateTo({ url: '/pages/login/login' })
 			},
 			goRegister() {
-				// TODO: 跳转到注册页
-				uni.showToast({ title: '注册', icon: 'none' })
+				uni.navigateTo({ url: '/pages/register/register' })
 			}
 		}
 	}
@@ -85,6 +86,5 @@
 	.register-btn {
 		background-color: #ffffff;
 		color: #2E3440;
-		;
 	}
 </style>
