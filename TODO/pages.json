@@ -47,6 +47,12 @@
 			"style": {
 				"navigationBarTitleText": "settingID"
 			}
+		},
+		{
+			"path": "pages/my_missions/my_missions",
+			"style": {
+				"navigationBarTitleText": "计划详情"
+			}
 		}
 	],
 	"globalStyle": {

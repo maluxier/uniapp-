@@ -32,6 +32,17 @@
 				</view>
 			</view>
 
+			<!-- 计划描述 -->
+			<view class="form-group">
+				<text class="form-label">计划描述</text>
+				<textarea
+					class="form-textarea"
+					v-model="description"
+					placeholder="输入计划描述"
+					placeholder-class="ph"
+				></textarea>
+			</view>
+
 			<!-- 起始时间 -->
 			<view class="form-group">
 				<text class="form-label">起始时间</text>
@@ -65,6 +76,7 @@ const statusBarHeight = uni.$ui?.statusBarHeight || 44
 
 const name = ref('')
 const type = ref('')
+const description = ref('')
 const typeOptions = ['工作', '生活', '学习']
 const startDate = ref('')
 const endDate = ref('')
@@ -89,6 +101,9 @@ function handleCreate() {
 		id: Date.now(),
 		name: name.value.trim(),
 		type: type.value,
+			description: description.value.trim(),
+			startDate: startDate.value,
+			endDate: endDate.value,
 		done: false,
 		deadline: deadline
 	})
@@ -165,6 +180,19 @@ function handleCreate() {
 .ph {
 	color: #bbb;
 	font-size: 30rpx;
+}
+
+/* ===== 文本框 ===== */
+.form-textarea {
+	background-color: #fff;
+	border-radius: 16rpx;
+	padding: 24rpx 30rpx;
+	height: 180rpx;
+	font-size: 30rpx;
+	color: #2E3440;
+	box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+	width: 100%;
+	box-sizing: border-box;
 }
 
 /* ===== 类型选择 ===== */

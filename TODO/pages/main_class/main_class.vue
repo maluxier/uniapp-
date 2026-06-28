@@ -37,6 +37,7 @@
 						v-for="t in item.tasks"
 						:key="t.id"
 						class="task-item"
+							@click="goDetail(t)"
 					>
 						<view class="task-left">
 							<view
@@ -95,6 +96,12 @@ function toggleTask(t) {
 		uni.setStorageSync('tasks', tasks)
 		refreshKey.value++
 	}
+}
+
+function goDetail(t) {
+	uni.navigateTo({
+		url: '/pages/my_missions/my_missions?item=' + encodeURIComponent(JSON.stringify(t))
+	})
 }
 </script>
 
