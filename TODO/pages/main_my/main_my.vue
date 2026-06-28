@@ -10,6 +10,10 @@
 
 		<!-- 设置选项 -->
 		<view class="settings-card">
+			<view class="setting-item" @click="goAISettings">
+				<text class="setting-label">✨ AI 接口设置</text>
+				<uni-icons type="right" size="16" color="#ccc"></uni-icons>
+			</view>
 			<view class="setting-item" @click="onSetting('account')">
 				<text class="setting-label">账户设置</text>
 				<uni-icons type="right" size="16" color="#ccc"></uni-icons>
@@ -35,6 +39,10 @@ const statusBarHeight = uni.$ui?.statusBarHeight || 44
 const currentUser = uni.getStorageSync('currentUser') || {}
 const nickname = currentUser.nickname || '用户'
 const userInitial = nickname.charAt(0)
+
+function goAISettings() {
+  uni.navigateTo({ url: '/pages/ai_settings/ai_settings' })
+}
 
 function onSetting(type) {
 	const titles = { account: '账户设置', notification: '通知设置', about: '关于我们' }

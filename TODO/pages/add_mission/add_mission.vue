@@ -69,6 +69,11 @@ const typeOptions = ['工作', '生活', '学习']
 const startDate = ref('')
 const endDate = ref('')
 
+// 跳转到 AI 智能规划页面
+function goAIForm() {
+  uni.navigateTo({ url: '/pages/ai_form/ai_form' })
+}
+
 function handleCreate() {
 	if (!name.value.trim() || !type.value) {
 		uni.showToast({ title: '请填写计划名称和类型', icon: 'none' })

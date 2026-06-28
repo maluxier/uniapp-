@@ -41,6 +41,30 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/ai_settings/ai_settings",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/ai_form/ai_form",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/ai_loading/ai_loading",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/ai_preview/ai_preview",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
