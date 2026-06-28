@@ -41,6 +41,12 @@
 			"style": {
 				"navigationStyle": "custom"
 			}
+		},
+		{
+			"path": "pages/settings_ID/settings_ID",
+			"style": {
+				"navigationBarTitleText": "settingID"
+			}
 		}
 	],
 	"globalStyle": {
