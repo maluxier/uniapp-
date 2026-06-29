@@ -49,7 +49,7 @@
 							</view>
 							<text class="task-name" :class="{ done: t.done }">{{ t.name }}</text>
 						</view>
-						<text class="task-tag">{{ t.type }}</text>
+						<text class="task-tag" :class="'tag-' + t.type">{{ t.type }}</text>
 					</view>
 				</view>
 			</view>
@@ -283,6 +283,21 @@ function goDetail(t) {
 	border: 2rpx solid #ddd;
 	flex-shrink: 0;
 	margin-left: 16rpx;
+}
+
+.tag-工作 {
+	border-color: #EBCB8B;
+	color: #EBCB8B;
+}
+
+.tag-生活 {
+	border-color: #A3BE8C;
+	color: #A3BE8C;
+}
+
+.tag-学习 {
+	border-color: #88C0D0;
+	color: #88C0D0;
 }
 
 .empty-hint {

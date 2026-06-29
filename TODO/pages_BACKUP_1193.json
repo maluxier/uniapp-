@@ -55,18 +55,17 @@
 			}
 		},
 		{
-			"path": "pages/main_data/main_data",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		},
-		{
+<<<<<<< HEAD
 			"path": "pages/ai_settings/ai_settings",
+=======
+			"path": "pages/main_data/main_data",
+>>>>>>> main
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
+<<<<<<< HEAD
 			"path": "pages/ai_form/ai_form",
 			"style": {
 				"navigationStyle": "custom"
@@ -80,7 +79,9 @@
 		},
 		{
 			"path": "pages/ai_preview/ai_preview",
+=======
 			"path": "pages/search/search",
+>>>>>>> main
 			"style": {
 				"navigationStyle": "custom"
 			}
