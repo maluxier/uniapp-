@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "types": ["@dcloudio/types"]
+  },
+  "include": ["*.vue", "*.js", "*.ts", "pages/**/*.vue", "api/**/*.js", "uni_modules/**/*.vue"]
+}

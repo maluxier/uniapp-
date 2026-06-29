@@ -10,6 +10,10 @@
 
 		<!-- 设置选项 -->
 		<view class="settings-card">
+			<view class="setting-item" @click="goAISettings">
+				<text class="setting-label">✨ AI 接口设置</text>
+				<uni-icons type="right" size="16" color="#ccc"></uni-icons>
+			</view>
 			<view class="setting-item" @click="onSetting('account')">
 				<text class="setting-label">账户设置</text>
 				<uni-icons type="right" size="16" color="#ccc"></uni-icons>
@@ -42,6 +46,10 @@ onShow(() => {
 	const user = uni.getStorageSync('currentUser') || {}
 	nickname.value = user.nickname || user.account || '用户'
 })
+
+function goAISettings() {
+  uni.navigateTo({ url: '/pages/ai_settings/ai_settings' })
+}
 
 function onSetting(type) {
 	if (type === 'account') {
