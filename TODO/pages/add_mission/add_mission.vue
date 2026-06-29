@@ -3,7 +3,7 @@
 		<!-- 顶部：标题 + AI标签 -->
 		<view class="header">
 			<text class="page-title">新的计划</text>
-			<view class="ai-tag">
+			<view class="ai-tag" @click="goAIForm">
 				<text class="ai-tag-text">AI计划</text>
 			</view>
 		</view>

@@ -40,6 +40,16 @@
             "sdkConfigs": {}
         }
     },
+    "h5": {
+        "title": "TODO",
+        "router": {
+            "mode": "hash",
+            "base": ""
+        },
+        "devServer": {
+            "port": 8080
+        }
+    },
     "quickapp": {},
     "mp-weixin": {
         "appid": "",
