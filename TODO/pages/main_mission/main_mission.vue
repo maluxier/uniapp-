@@ -1,10 +1,15 @@
 <template>
 	<view class="page">
-		<!-- 顶部：标题 + 添加按钮 -->
+		<!-- 顶部：标题 + 搜索 + 添加按钮 -->
 		<view class="header">
 			<text class="page-title">我的计划</text>
-			<view class="add-btn" @click="onAdd">
-				<text class="add-icon">+</text>
+			<view class="header-actions">
+				<view class="search-btn" @click="onSearch">
+					<uni-icons type="search" size="30" color="#5E81AC"></uni-icons>
+				</view>
+				<view class="add-btn" @click="onAdd">
+					<text class="add-icon">+</text>
+				</view>
 			</view>
 		</view>
 
@@ -142,6 +147,10 @@ function onTaskClick(item) {
 function onAdd() {
 	uni.navigateTo({ url: '/pages/add_mission/add_mission' })
 }
+
+function onSearch() {
+	uni.navigateTo({ url: '/pages/search/search' })
+}
 </script>
 
 <style>
@@ -174,6 +183,21 @@ function onAdd() {
 	height: 72rpx;
 	border-radius: 50%;
 	background-color: #5E81AC;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.header-actions {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+}
+
+.search-btn {
+	width: 72rpx;
+	height: 72rpx;
+	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
