@@ -1,9 +1,12 @@
 <template>
 	<view class="page">
-		<!-- 顶部：标题 + 搜索 + 添加按钮 -->
+		<!-- 顶部：标题 + AI + 搜索 + 添加按钮 -->
 		<view class="header">
 			<text class="page-title">我的计划</text>
 			<view class="header-actions">
+				<view class="ai-btn" @click="goAIForm">
+					<text class="ai-btn-text">✨AI</text>
+				</view>
 				<view class="search-btn" @click="onSearch">
 					<uni-icons type="search" size="30" color="#5E81AC"></uni-icons>
 				</view>
@@ -50,7 +53,10 @@
 							>
 								<uni-icons v-if="item.done" type="checkmarkempty" size="14" color="#fff"></uni-icons>
 							</view>
-							<text class="task-name" :class="{ done: item.done }">{{ item.name }}</text>
+							<view class="task-info">
+								<text class="task-name" :class="{ done: item.done }">{{ item.name || item.task }}</text>
+								<text class="task-brief" v-if="item.time || item.description">{{ item.time || item.description }}</text>
+							</view>
 						</view>
 						<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 					</view>
@@ -80,7 +86,10 @@
 							>
 								<uni-icons v-if="item.done" type="checkmarkempty" size="14" color="#fff"></uni-icons>
 							</view>
-							<text class="task-name" :class="{ done: item.done }">{{ item.name }}</text>
+								<view class="task-info">
+									<text class="task-name" :class="{ done: item.done }">{{ item.name || item.task }}</text>
+									<text class="task-brief" v-if="item.time || item.description">{{ item.time || item.description }}</text>
+								</view>
 						</view>
 						<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 					</view>
@@ -97,7 +106,7 @@
 import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 
-const categories = ['全部', '工作', '生活', '学习']
+const categories = ['全部', '工作', '生活', '学习', '运动', '休息']
 const activeCategory = ref('全部')
 
 const tasks = ref(uni.getStorageSync('tasks') || [])
@@ -144,6 +153,10 @@ function toggleTask(item) {
 function onTaskClick(item) {
 }
 
+function goAIForm() {
+	uni.navigateTo({ url: '/pages/ai_form/ai_form' })
+}
+
 function onAdd() {
 	uni.navigateTo({ url: '/pages/add_mission/add_mission' })
 }
@@ -178,26 +191,41 @@ function onSearch() {
 	color: #2E3440;
 }
 
-.add-btn {
-	width: 72rpx;
-	height: 72rpx;
-	border-radius: 50%;
-	background-color: #5E81AC;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .header-actions {
 	display: flex;
 	align-items: center;
 	gap: 16rpx;
 }
 
+.ai-btn {
+	padding: 10rpx 24rpx;
+	border-radius: 30rpx;
+	background: linear-gradient(135deg, #5E81AC, #81A1C1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.ai-btn-text {
+	font-size: 24rpx;
+	color: #fff;
+	font-weight: 600;
+}
+
 .search-btn {
 	width: 72rpx;
 	height: 72rpx;
 	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.add-btn {
+	width: 72rpx;
+	height: 72rpx;
+	border-radius: 50%;
+	background-color: #5E81AC;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -292,9 +320,25 @@ function onSearch() {
 	border-color: #A3BE8C;
 }
 
+.task-info {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6rpx;
+}
+
 .task-name {
 	font-size: 28rpx;
 	color: #555;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.task-brief {
+	font-size: 22rpx;
+	color: #aaa;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -328,6 +372,16 @@ function onSearch() {
 .tag-学习 {
 	border-color: #88C0D0;
 	color: #88C0D0;
+}
+
+.tag-运动 {
+	border-color: #A3BE8C;
+	color: #A3BE8C;
+}
+
+.tag-休息 {
+	border-color: #D08770;
+	color: #D08770;
 }
 
 .empty-hint {

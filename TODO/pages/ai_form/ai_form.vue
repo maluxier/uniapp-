@@ -12,99 +12,136 @@
     </view>
 
     <!-- 表单 -->
-    <view class="form">
-      <!-- 目标描述 -->
-      <view class="form-group">
-        <view class="label-row">
-          <text class="form-label">目标描述</text>
-          <text class="form-required">*</text>
+    <scroll-view class="form-scroll" scroll-y="true">
+      <view class="form">
+        <!-- 计划名称 -->
+        <view class="form-group">
+          <view class="label-row">
+            <text class="form-label">计划名称</text>
+            <text class="form-required">*</text>
+          </view>
+          <input
+            class="form-input"
+            type="text"
+            v-model="planName"
+            placeholder="给你的计划取个名字，如：期末复习冲刺"
+            placeholder-class="ph"
+            :maxlength="30"
+          />
         </view>
-        <textarea
-          class="form-textarea"
-          v-model="goal"
-          placeholder="详细描述你想完成的目标，AI 会帮你拆解成每日任务&#10;&#10;例如：&#10;• 下周要完成产品评审的PPT，包含市场分析和竞品对比&#10;• 一个月内学习 Python 数据分析，从入门到能处理 Excel 报表&#10;• 三个月备考 CET-6，每天背单词+刷真题"
-          placeholder-class="ph"
-          :maxlength="500"
-          auto-height
-        />
-        <text class="char-count">{{ goal.length }}/500</text>
-      </view>
 
-      <!-- 计划时间段 -->
-      <view class="form-group">
-        <view class="label-row">
-          <text class="form-label">计划时间段</text>
-          <text class="form-required">*</text>
+        <!-- 计划类型 -->
+        <view class="form-group">
+          <view class="label-row">
+            <text class="form-label">计划类型</text>
+            <text class="form-required">*</text>
+          </view>
+          <view class="type-row">
+            <view
+              v-for="t in typeOptions"
+              :key="t"
+              class="type-tag"
+              :class="{ active: planType === t }"
+              @click="planType = t"
+            >
+              <text>{{ t }}</text>
+            </view>
+          </view>
         </view>
-        <view class="date-row">
-          <view class="date-item">
-            <text class="date-label">开始</text>
-            <picker mode="date" :value="startDate" @change="e => startDate = e.detail.value">
-              <view class="picker-box" :class="{ empty: !startDate }">
-                <uni-icons type="calendar" size="18" color="#999"></uni-icons>
-                <text>{{ startDate || '选择日期' }}</text>
+
+        <!-- 目标描述 -->
+        <view class="form-group">
+          <view class="label-row">
+            <text class="form-label">目标描述</text>
+            <text class="form-required">*</text>
+          </view>
+          <textarea
+            class="form-textarea"
+            v-model="goal"
+            placeholder="详细描述你想完成的目标，AI 会帮你拆解成每日任务&#10;&#10;例如：&#10;• 下周要完成产品评审的PPT，包含市场分析和竞品对比&#10;• 一个月内学习 Python 数据分析，从入门到能处理 Excel 报表&#10;• 三个月备考 CET-6，每天背单词+刷真题"
+            placeholder-class="ph"
+            :maxlength="500"
+            auto-height
+          />
+          <text class="char-count">{{ goal.length }}/500</text>
+        </view>
+
+        <!-- 计划时间段 -->
+        <view class="form-group">
+          <view class="label-row">
+            <text class="form-label">计划时间段</text>
+            <text class="form-required">*</text>
+          </view>
+          <view class="date-row">
+            <view class="date-item">
+              <text class="date-label">开始</text>
+              <picker mode="date" :value="startDate" @change="e => startDate = e.detail.value">
+                <view class="picker-box" :class="{ empty: !startDate }">
+                  <uni-icons type="calendar" size="18" color="#999"></uni-icons>
+                  <text>{{ startDate || '选择日期' }}</text>
+                </view>
+              </picker>
+            </view>
+            <text class="date-arrow">→</text>
+            <view class="date-item">
+              <text class="date-label">结束</text>
+              <picker mode="date" :value="endDate" :start="startDate || todayStr" @change="e => endDate = e.detail.value">
+                <view class="picker-box" :class="{ empty: !endDate }">
+                  <uni-icons type="calendar" size="18" color="#999"></uni-icons>
+                  <text>{{ endDate || '选择日期' }}</text>
+                </view>
+              </picker>
+            </view>
+          </view>
+        </view>
+
+        <!-- 每天可用时间 -->
+        <view class="form-group">
+          <view class="label-row">
+            <text class="form-label">每天可用时间</text>
+            <text class="form-required">*</text>
+          </view>
+          <view class="hours-selector">
+            <view
+              v-for="h in hourOptions"
+              :key="h"
+              class="hour-chip"
+              :class="{ active: dailyHours === h }"
+              @click="dailyHours = h"
+            >
+              <text>{{ h }}h</text>
+            </view>
+          </view>
+          <text class="field-hint" v-if="dailyHours">每天约 {{ dailyHours }} 小时可用于执行计划</text>
+        </view>
+
+        <!-- 专注力时段 -->
+        <view class="form-group">
+          <view class="label-row">
+            <text class="form-label">专注力时段</text>
+            <text class="form-required">*</text>
+          </view>
+          <text class="field-hint mb">告诉 AI 你在哪个时段精力最充沛，它会据此安排高难度任务</text>
+          <view class="focus-grid">
+            <view
+              v-for="f in focusOptions"
+              :key="f.value"
+              class="focus-card"
+              :class="{ active: focusPreference === f.value }"
+              @click="focusPreference = f.value"
+            >
+              <text class="focus-emoji">{{ f.emoji }}</text>
+              <view class="focus-text">
+                <text class="focus-name">{{ f.name }}</text>
+                <text class="focus-desc">{{ f.desc }}</text>
               </view>
-            </picker>
-          </view>
-          <text class="date-arrow">→</text>
-          <view class="date-item">
-            <text class="date-label">结束</text>
-            <picker mode="date" :value="endDate" :start="startDate || todayStr" @change="e => endDate = e.detail.value">
-              <view class="picker-box" :class="{ empty: !endDate }">
-                <uni-icons type="calendar" size="18" color="#999"></uni-icons>
-                <text>{{ endDate || '选择日期' }}</text>
-              </view>
-            </picker>
-          </view>
-        </view>
-      </view>
-
-      <!-- 每天可用时间 -->
-      <view class="form-group">
-        <view class="label-row">
-          <text class="form-label">每天可用时间</text>
-          <text class="form-required">*</text>
-        </view>
-        <view class="hours-selector">
-          <view
-            v-for="h in hourOptions"
-            :key="h"
-            class="hour-chip"
-            :class="{ active: dailyHours === h }"
-            @click="dailyHours = h"
-          >
-            <text>{{ h }}h</text>
-          </view>
-        </view>
-        <text class="field-hint" v-if="dailyHours">每天约 {{ dailyHours }} 小时可用于执行计划</text>
-      </view>
-
-      <!-- 专注力时段 -->
-      <view class="form-group">
-        <view class="label-row">
-          <text class="form-label">专注力时段</text>
-          <text class="form-required">*</text>
-        </view>
-        <text class="field-hint mb">告诉 AI 你在哪个时段精力最充沛，它会据此安排高难度任务</text>
-        <view class="focus-grid">
-          <view
-            v-for="f in focusOptions"
-            :key="f.value"
-            class="focus-card"
-            :class="{ active: focusPreference === f.value }"
-            @click="focusPreference = f.value"
-          >
-            <text class="focus-emoji">{{ f.emoji }}</text>
-            <view class="focus-text">
-              <text class="focus-name">{{ f.name }}</text>
-              <text class="focus-desc">{{ f.desc }}</text>
             </view>
           </view>
         </view>
       </view>
-    </view>
+    </scroll-view>
 
-    <!-- 生成按钮 -->
+    <!-- 生成按钮（固定在底部） -->
     <view class="bottom-area">
       <view
         class="generate-btn"
@@ -127,6 +164,9 @@ const now = new Date()
 const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
 
 // ===== 表单数据 =====
+const planName = ref('')
+const planType = ref('')
+const typeOptions = ['工作', '学习', '生活']
 const goal = ref('')
 const startDate = ref('')
 const endDate = ref('')
@@ -146,7 +186,9 @@ const focusOptions = [
 
 // ===== 表单校验 =====
 const canSubmit = computed(() => {
-  return goal.value.trim().length >= 5
+  return planName.value.trim().length >= 1
+    && planType.value
+    && goal.value.trim().length >= 5
     && startDate.value
     && endDate.value
     && dailyHours.value > 0
@@ -164,9 +206,10 @@ function goSettings() {
 
 // ===== 生成计划 =====
 function handleGenerate() {
-  // 前置校验
   if (!canSubmit.value) {
     const checks = []
+    if (planName.value.trim().length < 1) checks.push('计划名称')
+    if (!planType.value) checks.push('计划类型')
     if (goal.value.trim().length < 5) checks.push('目标描述（至少5个字）')
     if (!startDate.value) checks.push('开始日期')
     if (!endDate.value) checks.push('结束日期')
@@ -176,7 +219,6 @@ function handleGenerate() {
     return
   }
 
-  // 日期合法性校验
   if (endDate.value < startDate.value) {
     uni.showToast({ title: '结束日期不能早于开始日期', icon: 'none' })
     return
@@ -184,6 +226,8 @@ function handleGenerate() {
 
   // 组装参数，通过路由传给加载页
   const params = {
+    planName: planName.value.trim(),
+    planType: planType.value,
     goal: goal.value.trim(),
     startDate: startDate.value,
     endDate: endDate.value,
@@ -191,7 +235,6 @@ function handleGenerate() {
     focusPreference: focusPreference.value
   }
 
-  // URL 参数编码（对象转 JSON 字符串）
   const paramsStr = encodeURIComponent(JSON.stringify(params))
   uni.navigateTo({ url: `/pages/ai_loading/ai_loading?params=${paramsStr}` })
 }
@@ -200,10 +243,10 @@ function handleGenerate() {
 <style>
 .page {
   min-height: 100vh;
-  padding: 30rpx 30rpx 40rpx;
   background-color: #ECEFF4;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  padding-bottom: 200rpx;
 }
 
 /* ===== 顶部 ===== */
@@ -211,7 +254,8 @@ function handleGenerate() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40rpx;
+  padding: 30rpx 30rpx 16rpx;
+  flex-shrink: 0;
 }
 
 .back-btn {
@@ -241,11 +285,18 @@ function handleGenerate() {
   font-weight: 500;
 }
 
-/* ===== 表单 ===== */
+/* ===== 可滚动表单区域 ===== */
+.form-scroll {
+  flex: 1;
+  padding: 0 30rpx;
+  padding-bottom: 180rpx;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: 36rpx;
+  padding-top: 10rpx;
 }
 
 .form-group {
@@ -282,6 +333,44 @@ function handleGenerate() {
   margin-bottom: 16rpx;
 }
 
+/* ===== 单行输入 ===== */
+.form-input {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 0 30rpx;
+  height: 90rpx;
+  font-size: 30rpx;
+  color: #2E3440;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+
+.ph {
+  color: #bbb;
+  font-size: 26rpx;
+}
+
+/* ===== 类型选择 ===== */
+.type-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.type-tag {
+  padding: 16rpx 40rpx;
+  border-radius: 30rpx;
+  background-color: #fff;
+  color: #888;
+  font-size: 28rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+  transition: all 0.2s;
+}
+
+.type-tag.active {
+  background-color: #5E81AC;
+  color: #fff;
+  font-weight: 500;
+}
+
 /* ===== 多行文本 ===== */
 .form-textarea {
   background-color: #fff;
@@ -293,12 +382,6 @@ function handleGenerate() {
   box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
   line-height: 1.6;
   box-sizing: border-box;
-}
-
-.ph {
-  color: #bbb;
-  font-size: 26rpx;
-  line-height: 1.6;
 }
 
 .char-count {
@@ -430,7 +513,7 @@ function handleGenerate() {
   color: #888;
 }
 
-/* ===== 底部 ===== */
+/* ===== 底部固定栏 ===== */
 .bottom-area {
   position: fixed;
   bottom: 0;
@@ -443,6 +526,7 @@ function handleGenerate() {
   flex-direction: column;
   align-items: center;
   gap: 12rpx;
+  flex-shrink: 0;
 }
 
 .generate-btn {

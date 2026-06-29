@@ -23,13 +23,8 @@
         </view>
         <view class="stat-divider"></view>
         <view class="stat-item">
-          <text class="stat-value">{{ totalEXP }}</text>
-          <text class="stat-label">总经验值</text>
-        </view>
-        <view class="stat-divider"></view>
-        <view class="stat-item">
-          <text class="stat-value">{{ totalAP }}</text>
-          <text class="stat-label">总行动点</text>
+          <text class="stat-value">{{ dateRange }}</text>
+          <text class="stat-label">计划周期</text>
         </view>
       </view>
     </view>
@@ -79,21 +74,16 @@
               <!-- 任务名 -->
               <text class="card-task">{{ item.task }}</text>
 
-              <!-- 底部标签行 -->
+              <!-- 分类标签 -->
               <view class="card-tags">
-                <!-- 分类标签 -->
-                <view class="tag tag-category" :style="{ backgroundColor: getCatColor(item.category) + '20', color: getCatColor(item.category) }">
+                <view
+                  class="tag tag-category"
+                  :style="{
+                    backgroundColor: getCatColor(item.category) + '20',
+                    color: getCatColor(item.category)
+                  }"
+                >
                   <text>{{ getCatEmoji(item.category) }} {{ getCatLabel(item.category) }}</text>
-                </view>
-
-                <!-- AP 行动点 -->
-                <view class="tag tag-ap">
-                  <text v-for="n in 5" :key="n" class="ap-star" :class="{ filled: n <= item.ap }">⚡</text>
-                </view>
-
-                <!-- EXP -->
-                <view class="tag tag-exp">
-                  <text>+{{ item.exp }} EXP</text>
                 </view>
               </view>
 
@@ -165,16 +155,6 @@
               </view>
             </view>
           </view>
-          <view class="popup-field-row">
-            <view class="popup-field half">
-              <text class="popup-label">AP (1-5)</text>
-              <input class="popup-input" type="number" v-model.number="editForm.ap" placeholder="3" />
-            </view>
-            <view class="popup-field half">
-              <text class="popup-label">EXP</text>
-              <input class="popup-input" type="number" v-model.number="editForm.exp" placeholder="50" />
-            </view>
-          </view>
         </view>
         <view class="popup-btns">
           <view class="popup-btn cancel" @click="showEditPopup = false">取消</view>
@@ -193,9 +173,9 @@ import { getCategoryInfo, getValidCategories } from '@/api/llm.js'
 const validCats = getValidCategories()
 
 // ===== 数据 =====
-const allTasks = ref([])       // 所有任务
-const planParams = ref(null)   // 原始表单参数
-const editMode = ref(false)    // 是否编辑模式
+const allTasks = ref([])
+const planParams = ref(null)
+const editMode = ref(false)
 const showEditPopup = ref(false)
 const editForm = ref({})
 const editingItem = ref(null)
@@ -212,9 +192,8 @@ onMounted(() => {
   if (rawTasks) {
     try {
       const tasks = JSON.parse(decodeURIComponent(rawTasks))
-      // 添加前端确认标记
       tasks.forEach(t => {
-        t._confirmed = true   // 默认全部确认
+        t._confirmed = true
         t._removed = false
       })
       allTasks.value = tasks
@@ -236,17 +215,22 @@ onMounted(() => {
 // ===== 计算属性 =====
 const planTitle = computed(() => {
   if (planParams.value) {
-    return planParams.value.goal || 'AI 生成计划'
+    const name = planParams.value.planName || ''
+    const goal = planParams.value.goal || ''
+    return name || goal || 'AI 生成计划'
   }
   return 'AI 生成计划'
 })
 
-// 按日期分组
+const dateRange = computed(() => {
+  if (planParams.value) {
+    return `${planParams.value.startDate || ''} ~ ${planParams.value.endDate || ''}`
+  }
+  return ''
+})
+
 const groupedTasks = computed(() => {
   const tasks = allTasks.value.filter(t => !t._removed)
-
-  // AI 可能没有 date 字段，按时间顺序模拟分组
-  // 如果有 date 字段就按 date 分组，否则全部归到计划开始日期
   const groups = {}
   const baseDate = planParams.value?.startDate || ''
 
@@ -256,60 +240,37 @@ const groupedTasks = computed(() => {
     groups[date].push(t)
   })
 
-  // 保持日期顺序
   return Object.keys(groups).sort().map(date => ({
     date,
     tasks: groups[date]
   }))
 })
 
-const confirmedCount = computed(() => allTasks.value.filter(t => t._confirmed && !t._removed).length)
+const confirmedCount = computed(() =>
+  allTasks.value.filter(t => t._confirmed && !t._removed).length
+)
 
 const allConfirmed = computed(() => {
   const visible = allTasks.value.filter(t => !t._removed)
   return visible.length > 0 && visible.every(t => t._confirmed)
 })
 
-const totalEXP = computed(() => {
-  return allTasks.value
-    .filter(t => t._confirmed && !t._removed)
-    .reduce((sum, t) => sum + (t.exp || 0), 0)
-})
-
-const totalAP = computed(() => {
-  return allTasks.value
-    .filter(t => t._confirmed && !t._removed)
-    .reduce((sum, t) => sum + (t.ap || 0), 0)
-})
-
-// 滚动区高度（减去顶部摘要和底部栏）
 const scrollHeight = computed(() => {
-  // uni-app 中可用 uni.getSystemInfoSync 获取屏幕高度
   const sysInfo = uni.getSystemInfoSync()
-  // 顶部 ~300rpx + 底部 ~140rpx，rpx 到 px 按屏幕宽度换算
   const rpxRatio = sysInfo.screenWidth / 750
-  const topHeight = 300 * rpxRatio
+  const topHeight = 260 * rpxRatio
   const bottomHeight = 140 * rpxRatio
   return sysInfo.windowHeight - topHeight - bottomHeight
 })
 
 // ===== 分类辅助 =====
-function getCatLabel(key) {
-  return getCategoryInfo(key).label
-}
-
-function getCatColor(key) {
-  return getCategoryInfo(key).color
-}
-
-function getCatEmoji(key) {
-  return getCategoryInfo(key).icon
-}
+function getCatLabel(key) { return getCategoryInfo(key).label }
+function getCatColor(key) { return getCategoryInfo(key).color }
+function getCatEmoji(key) { return getCategoryInfo(key).icon }
 
 // ===== 日期格式化 =====
 function formatDateDisplay(dateStr) {
   if (!dateStr || dateStr === '待定') return dateStr
-  // 2026-06-30 → 6月30日
   const parts = dateStr.split('-')
   if (parts.length === 3) {
     return `${parseInt(parts[1])}月${parseInt(parts[2])}日`
@@ -324,12 +285,11 @@ function getWeekday(dateStr) {
   return weekdays[d.getDay()] || ''
 }
 
-// ===== 卡片点击（非编辑模式暂不处理，后续可跳详情） =====
-function onCardClick(item, group, index) {
-  // 预留：后续可跳转到任务详情页
+function onCardClick() {
+  // 预留：后续可跳转任务详情页
 }
 
-// ===== 确认/取消确认 =====
+// ===== 确认 / 删除 =====
 function confirmItem(item) {
   item._confirmed = !item._confirmed
 }
@@ -348,16 +308,12 @@ function removeItem(item) {
 }
 
 // ===== 编辑弹窗 =====
-function openEditPopup(item, group, index) {
+function openEditPopup(item) {
   editingItem.value = item
-  editingGroup.value = group
-  editingIndex.value = index
   editForm.value = {
     time: item.time || '',
     task: item.task || '',
-    category: item.category || 'study',
-    ap: item.ap || 3,
-    exp: item.exp || 50
+    category: item.category || 'study'
   }
   showEditPopup.value = true
 }
@@ -377,8 +333,6 @@ function saveEdit() {
     item.time = editForm.value.time.trim()
     item.task = editForm.value.task.trim()
     item.category = editForm.value.category
-    item.ap = Math.max(1, Math.min(5, Number(editForm.value.ap) || 3))
-    item.exp = Math.max(0, Number(editForm.value.exp) || 50)
     item._isEdited = true
   }
 
@@ -386,14 +340,11 @@ function saveEdit() {
   uni.showToast({ title: '已更新', icon: 'success' })
 }
 
-// ===== 全选/取消 =====
+// ===== 全选 / 模式切换 =====
 function toggleSelectAll() {
   const visible = allTasks.value.filter(t => !t._removed)
   const allChecked = visible.every(t => t._confirmed)
-
-  visible.forEach(t => {
-    t._confirmed = !allChecked
-  })
+  visible.forEach(t => { t._confirmed = !allChecked })
 }
 
 function toggleEditMode() {
@@ -409,29 +360,37 @@ function handleConfirmAll() {
     return
   }
 
-  // 为每条任务补充日期（如果没有）
   const today = new Date()
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+
   confirmedTasks.forEach((t, i) => {
+    // 补全日期字段
     if (!t.date && planParams.value?.startDate) {
       t.date = planParams.value.startDate
     }
     if (!t.date) {
-      // 按顺序往后排日期
       const d = new Date(today)
-      d.setDate(d.getDate() + Math.floor(i / 4)) // 每天约4条任务
+      d.setDate(d.getDate() + Math.floor(i / 4))
       t.date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
     }
+
+    // 补全 startDate / endDate（main_mission 和 main_data 依此判断任务归属）
+    t.startDate = planParams.value?.startDate || t.date
+    t.endDate = planParams.value?.endDate || t.date
+
+    // 补全 deadline（main_mission 依此判断今日/明日）
+    t.deadline = t.date === todayStr ? 'today' : 'tomorrow'
+
     t.status = 0
     t.isAIGenerated = true
+    // 同步 type 字段（兼容旧版 main_mission 的筛选：t.type === 工作/学习/生活）
+    t.type = getCatLabel(t.category)
   })
 
   // 保存到本地存储
   let existingTasks = uni.getStorageSync('tasks') || []
-
-  // 避免重复添加（按 id 去重）
   const existingIds = new Set(existingTasks.map(t => t.id))
   const newTasks = confirmedTasks.filter(t => !existingIds.has(t.id))
-
   existingTasks = [...existingTasks, ...newTasks]
   uni.setStorageSync('tasks', existingTasks)
 
@@ -452,23 +411,20 @@ function saveToHistory(tasks) {
     title: planTitle.value,
     createdAt: new Date().toISOString(),
     taskCount: tasks.length,
-    totalEXP: tasks.reduce((s, t) => s + (t.exp || 0), 0),
     tasks: tasks
   })
-  // 最多保留 20 条
   if (history.length > 20) history.length = 20
   uni.setStorageSync('planHistory', history)
 }
 
 // ===== 返回 =====
 function goBack() {
-  // 有已编辑数据时提示
   uni.showModal({
     title: '返回修改',
     content: '返回将丢弃当前 AI 生成结果，确定吗？',
     success: (res) => {
       if (res.confirm) {
-        uni.navigateBack({ delta: 2 }) // 跳过加载页，回到表单页
+        uni.navigateBack({ delta: 2 })
       }
     }
   })
@@ -555,7 +511,7 @@ function goBack() {
 }
 
 .stat-value {
-  font-size: 36rpx;
+  font-size: 32rpx;
   font-weight: 700;
   display: block;
 }
@@ -624,7 +580,6 @@ function goBack() {
   display: none;
 }
 
-/* 左侧时间轴 */
 .timeline-axis {
   width: 40rpx;
   display: flex;
@@ -664,7 +619,6 @@ function goBack() {
   border-color: #ECEFF4;
 }
 
-/* 右侧卡片 */
 .card-body {
   flex: 1;
   background-color: #fff;
@@ -717,31 +671,6 @@ function goBack() {
   border-radius: 20rpx;
   font-size: 22rpx;
   font-weight: 500;
-  white-space: nowrap;
-}
-
-.tag-category {
-  font-size: 22rpx;
-}
-
-.tag-ap {
-  display: flex;
-  gap: 2rpx;
-}
-
-.ap-star {
-  font-size: 20rpx;
-  opacity: 0.25;
-}
-
-.ap-star.filled {
-  opacity: 1;
-}
-
-.tag-exp {
-  background-color: #f5f0e8;
-  color: #D08770;
-  font-weight: 600;
 }
 
 /* ===== 编辑模式操作按钮 ===== */
@@ -901,15 +830,6 @@ function goBack() {
   display: flex;
   flex-direction: column;
   gap: 10rpx;
-}
-
-.popup-field.half {
-  flex: 1;
-}
-
-.popup-field-row {
-  display: flex;
-  gap: 20rpx;
 }
 
 .popup-label {
