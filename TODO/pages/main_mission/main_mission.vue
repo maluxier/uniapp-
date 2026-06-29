@@ -53,7 +53,10 @@
 							>
 								<uni-icons v-if="item.done" type="checkmarkempty" size="14" color="#fff"></uni-icons>
 							</view>
-							<text class="task-name" :class="{ done: item.done }">{{ item.name }}</text>
+							<view class="task-info">
+								<text class="task-name" :class="{ done: item.done }">{{ item.name || item.task }}</text>
+								<text class="task-brief" v-if="item.time || item.description">{{ item.time || item.description }}</text>
+							</view>
 						</view>
 						<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 					</view>
@@ -83,7 +86,10 @@
 							>
 								<uni-icons v-if="item.done" type="checkmarkempty" size="14" color="#fff"></uni-icons>
 							</view>
-							<text class="task-name" :class="{ done: item.done }">{{ item.name }}</text>
+								<view class="task-info">
+									<text class="task-name" :class="{ done: item.done }">{{ item.name || item.task }}</text>
+									<text class="task-brief" v-if="item.time || item.description">{{ item.time || item.description }}</text>
+								</view>
 						</view>
 						<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 					</view>
@@ -314,9 +320,25 @@ function onSearch() {
 	border-color: #A3BE8C;
 }
 
+.task-info {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6rpx;
+}
+
 .task-name {
 	font-size: 28rpx;
 	color: #555;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.task-brief {
+	font-size: 22rpx;
+	color: #aaa;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
