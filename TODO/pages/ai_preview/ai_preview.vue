@@ -361,7 +361,10 @@ function handleConfirmAll() {
   }
 
   const today = new Date()
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+
   confirmedTasks.forEach((t, i) => {
+    // 补全日期字段
     if (!t.date && planParams.value?.startDate) {
       t.date = planParams.value.startDate
     }
@@ -370,9 +373,17 @@ function handleConfirmAll() {
       d.setDate(d.getDate() + Math.floor(i / 4))
       t.date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
     }
+
+    // 补全 startDate / endDate（main_mission 和 main_data 依此判断任务归属）
+    t.startDate = planParams.value?.startDate || t.date
+    t.endDate = planParams.value?.endDate || t.date
+
+    // 补全 deadline（main_mission 依此判断今日/明日）
+    t.deadline = t.date === todayStr ? 'today' : 'tomorrow'
+
     t.status = 0
     t.isAIGenerated = true
-    // 同步类型字段（兼容旧版 main_mission 的 type 字段）
+    // 同步 type 字段（兼容旧版 main_mission 的筛选：t.type === 工作/学习/生活）
     t.type = getCatLabel(t.category)
   })
 

@@ -1,8 +1,11 @@
 <template>
 	<view class="page">
-		<!-- 顶部：标题 -->
+		<!-- 顶部：标题 + AI按钮 -->
 		<view class="header">
 			<text class="page-title">日程</text>
+			<view class="ai-btn" @click="goAIForm">
+				<text class="ai-btn-text">✨AI</text>
+			</view>
 		</view>
 
 		<!-- 日历卡片 -->
@@ -44,7 +47,7 @@
 				class="task-card"
 				@click="goDetail(item)"
 			>
-				<text class="task-name">{{ item.name }}</text>
+				<text class="task-name">{{ item.name || item.task }}</text>
 				<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 			</view>
 			<view v-if="selectedDateTasks.length === 0" class="empty-hint">当日暂无任务</view>
@@ -97,6 +100,10 @@ function selectDate(d) {
 		d.day > 15 ? prevMonth() : nextMonth()
 		selectedDay.value = 1
 	}
+}
+
+function goAIForm() {
+	uni.navigateTo({ url: '/pages/ai_form/ai_form' })
 }
 
 function prevMonth() {
@@ -156,6 +163,21 @@ function goDetail(t) {
 	font-size: 44rpx;
 	font-weight: 700;
 	color: #2E3440;
+	flex: 1;
+}
+
+.ai-btn {
+	padding: 10rpx 24rpx;
+	border-radius: 30rpx;
+	background: linear-gradient(135deg, #5E81AC, #81A1C1);
+	display: flex;
+	align-items: center;
+}
+
+.ai-btn-text {
+	font-size: 24rpx;
+	color: #fff;
+	font-weight: 600;
 }
 
 .calendar-card {
@@ -261,6 +283,11 @@ function goDetail(t) {
 .task-name {
 	font-size: 28rpx;
 	color: #555;
+	flex: 1;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .task-tag {
@@ -286,6 +313,16 @@ function goDetail(t) {
 .tag-学习 {
 	border-color: #88C0D0;
 	color: #88C0D0;
+}
+
+.tag-运动 {
+	border-color: #A3BE8C;
+	color: #A3BE8C;
+}
+
+.tag-休息 {
+	border-color: #D08770;
+	color: #D08770;
 }
 
 .empty-hint {
