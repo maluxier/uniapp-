@@ -53,6 +53,12 @@
 			"style": {
 				"navigationBarTitleText": "计划详情"
 			}
+		},
+		{
+			"path": "pages/main_data/main_data",
+			"style": {
+				"navigationStyle": "custom"
+			}
 		}
 	],
 	"globalStyle": {
@@ -74,6 +80,10 @@
 			{
 				"pagePath": "pages/main_class/main_class",
 				"text": "分类"
+			},
+			{
+				"pagePath": "pages/main_data/main_data",
+				"text": "日程"
 			},
 			{
 				"pagePath": "pages/main_my/main_my",
