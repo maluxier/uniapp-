@@ -45,7 +45,7 @@
 				@click="goDetail(item)"
 			>
 				<text class="task-name">{{ item.name }}</text>
-				<text class="task-tag">{{ item.type }}</text>
+				<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 			</view>
 			<view v-if="selectedDateTasks.length === 0" class="empty-hint">当日暂无任务</view>
 		</view>
@@ -271,6 +271,21 @@ function goDetail(t) {
 	border: 2rpx solid #ddd;
 	flex-shrink: 0;
 	margin-left: 16rpx;
+}
+
+.tag-工作 {
+	border-color: #EBCB8B;
+	color: #EBCB8B;
+}
+
+.tag-生活 {
+	border-color: #A3BE8C;
+	color: #A3BE8C;
+}
+
+.tag-学习 {
+	border-color: #88C0D0;
+	color: #88C0D0;
 }
 
 .empty-hint {

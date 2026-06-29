@@ -52,7 +52,7 @@
 							</view>
 							<text class="task-name" :class="{ done: item.done }">{{ item.name }}</text>
 						</view>
-						<text class="task-tag">{{ item.type }}</text>
+						<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 					</view>
 					<view v-if="todayTasks.length === 0" class="empty-hint">
 						<text>暂无今日任务</text>
@@ -82,7 +82,7 @@
 							</view>
 							<text class="task-name" :class="{ done: item.done }">{{ item.name }}</text>
 						</view>
-						<text class="task-tag">{{ item.type }}</text>
+						<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 					</view>
 					<view v-if="tomorrowTasks.length === 0" class="empty-hint">
 						<text>暂无明日任务</text>
@@ -313,6 +313,21 @@ function onSearch() {
 	border: 2rpx solid #ddd;
 	flex-shrink: 0;
 	margin-left: 16rpx;
+}
+
+.tag-工作 {
+	border-color: #EBCB8B;
+	color: #EBCB8B;
+}
+
+.tag-生活 {
+	border-color: #A3BE8C;
+	color: #A3BE8C;
+}
+
+.tag-学习 {
+	border-color: #88C0D0;
+	color: #88C0D0;
 }
 
 .empty-hint {

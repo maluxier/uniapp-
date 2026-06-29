@@ -22,7 +22,7 @@
 				@click="goDetail(item)"
 			>
 				<text class="task-name">{{ item.name }}</text>
-				<text class="task-tag">{{ item.type }}</text>
+				<text class="task-tag" :class="'tag-' + item.type">{{ item.type }}</text>
 			</view>
 			<view v-if="searched && filteredTasks.length === 0" class="empty-hint">未找到相关计划</view>
 			<view v-if="!searched" class="empty-hint init">输入关键词搜索计划</view>
@@ -115,6 +115,21 @@ function goDetail(item) {
 	border: 2rpx solid #ddd;
 	flex-shrink: 0;
 	margin-left: 16rpx;
+}
+
+.tag-工作 {
+	border-color: #EBCB8B;
+	color: #EBCB8B;
+}
+
+.tag-生活 {
+	border-color: #A3BE8C;
+	color: #A3BE8C;
+}
+
+.tag-学习 {
+	border-color: #88C0D0;
+	color: #88C0D0;
 }
 
 .empty-hint {
