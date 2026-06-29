@@ -1,9 +1,0 @@
-{
-  "name": "TODO",
-  "version": "1.0.0",
-  "description": "AI智能日程管理App",
-  "main": "main.js",
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {}
-}

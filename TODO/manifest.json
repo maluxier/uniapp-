@@ -1,24 +1,28 @@
 {
-    "name": "TODO",
-    "appid": "__UNI__5265072",
-    "description": "",
-    "versionName": "1.0.0",
-    "versionCode": "100",
-    "transformPx": false,
-    "app-plus": {
-        "usingComponents": true,
-        "nvueStyleCompiler": "uni-app",
-        "compilerVersion": 3,
-        "splashscreen": {
-            "alwaysShowBeforeRender": true,
-            "waiting": true,
-            "autoclose": true,
-            "delay": 0
+    "name" : "TODO",
+    "appid" : "__UNI__5265072",
+    "description" : "",
+    "versionName" : "1.0.0",
+    "versionCode" : "100",
+    "transformPx" : false,
+    /* 5+App特有相关 */
+    "app-plus" : {
+        "usingComponents" : true,
+        "nvueStyleCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
         },
-        "modules": {},
-        "distribute": {
-            "android": {
-                "permissions": [
+        /* 模块配置 */
+        "modules" : {},
+        /* 应用发布信息 */
+        "distribute" : {
+            /* android打包配置 */
+            "android" : {
+                "permissions" : [
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
@@ -36,39 +40,33 @@
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ]
             },
-            "ios": {},
-            "sdkConfigs": {}
+            /* ios打包配置 */
+            "ios" : {},
+            /* SDK配置 */
+            "sdkConfigs" : {}
         }
     },
-    "h5": {
-        "title": "TODO",
-        "router": {
-            "mode": "hash",
-            "base": ""
+    /* 快应用特有相关 */
+    "quickapp" : {},
+    /* 小程序特有相关 */
+    "mp-weixin" : {
+        "appid" : "",
+        "setting" : {
+            "urlCheck" : false
         },
-        "devServer": {
-            "port": 8080
-        }
+        "usingComponents" : true
     },
-    "quickapp": {},
-    "mp-weixin": {
-        "appid": "",
-        "setting": {
-            "urlCheck": false
-        },
-        "usingComponents": true
+    "mp-alipay" : {
+        "usingComponents" : true
     },
-    "mp-alipay": {
-        "usingComponents": true
+    "mp-baidu" : {
+        "usingComponents" : true
     },
-    "mp-baidu": {
-        "usingComponents": true
+    "mp-toutiao" : {
+        "usingComponents" : true
     },
-    "mp-toutiao": {
-        "usingComponents": true
+    "uniStatistics" : {
+        "enable" : false
     },
-    "uniStatistics": {
-        "enable": false
-    },
-    "vueVersion": "3"
+    "vueVersion" : "3"
 }
